@@ -652,19 +652,20 @@ a {
 }
 
 /* ---------------------------------------------------- */
-/* Ultra-Fluid Landing Animation (CSS Keyframe Driven) */
+/* Ultra-Fluid Systems & CUDA Landing Animation        */
 /* ---------------------------------------------------- */
 
 .landing-overlay {
   position: fixed;
   inset: 0;
-  background-color: #141312;
+  background-color: var(--background, #141312);
   z-index: 10000;
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: landingFadeOut 0.9s cubic-bezier(0.16, 1, 0.3, 1) 2.9s forwards;
+  animation: landingDepthExit 0.85s cubic-bezier(0.16, 1, 0.3, 1) 3s forwards;
   pointer-events: none;
+  will-change: transform, opacity, filter;
 }
 
 .landing-inner {
@@ -674,44 +675,64 @@ a {
   text-align: center;
   max-width: 540px;
   padding: 0 1.5rem;
+  position: relative;
 }
 
-.landing-cursor-standalone {
-  width: 1.5px;
-  height: 2.4rem;
-  background-color: var(--text);
-  animation: 
-    landingBlinkPulse 0.9s infinite ease-in-out,
-    landingCursorFadeOut 0.4s ease 0.6s forwards;
+.landing-hardware-tag {
+  font-size: 0.72rem;
+  color: var(--accent-teal);
+  opacity: 0;
+  transform: translateY(-4px);
+  margin-bottom: 1.25rem;
+  animation: landingTextSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
 }
 
 .landing-title-text {
   font-family: var(--font-baskerville), serif;
-  font-size: 2.5rem;
+  font-size: 2.75rem;
   font-weight: 400;
   color: var(--text);
   opacity: 0;
   transform: translateY(8px);
-  animation: landingTextSlideIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+  animation: landingTextSlideIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
 }
 
 .landing-subtitle-text {
   font-size: 0.95rem;
   color: var(--text-secondary);
-  margin-top: 0.85rem;
+  margin-top: 0.75rem;
   line-height: 1.6;
   opacity: 0;
   transform: translateY(8px);
-  animation: landingTextSlideIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) 1.3s forwards;
+  animation: landingTextSlideIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) 1.2s forwards;
 }
 
-@keyframes landingBlinkPulse {
-  0%, 100% { opacity: 0.15; }
-  50% { opacity: 1; }
+.landing-memory-bar-track {
+  width: 100%;
+  max-width: 280px;
+  height: 1px;
+  background-color: var(--border);
+  margin-top: 2rem;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  animation: landingTextSlideIn 0.5s ease 1.5s forwards;
 }
 
-@keyframes landingCursorFadeOut {
-  to { opacity: 0; display: none; }
+.landing-memory-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background-color: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+  animation: memoryLineFill 1.4s cubic-bezier(0.16, 1, 0.3, 1) 1.6s forwards;
+}
+
+@keyframes memoryLineFill {
+  from { width: 0%; }
+  to { width: 100%; }
 }
 
 @keyframes landingTextSlideIn {
@@ -721,12 +742,15 @@ a {
   }
 }
 
-@keyframes landingFadeOut {
+@keyframes landingDepthExit {
   to {
     opacity: 0;
+    transform: scale(1.035);
+    filter: blur(6px);
     visibility: hidden;
   }
 }
+
 
 /* Mouse Spotlight Layer */
 .mouse-spotlight {
