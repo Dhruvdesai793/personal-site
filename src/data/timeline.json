@@ -1,0 +1,38 @@
+[
+  {
+    "period": "2024 — Present",
+    "title": "ML Infrastructure & CUDA Kernel Research",
+    "category": "Systems & CUDA",
+    "description": "Architecting low-level execution backends for large-scale embedding models and custom FP16 FlashAttention-2 CUDA kernels.",
+    "tag": "CUDA / Infra",
+    "signature": "flash_attn_v2_kernel<<<grid, block, smem>>>(...)",
+    "highlight": "Achieved 142 TFLOPS throughput on RTX 4090 with online softmax tiling."
+  },
+  {
+    "period": "2023",
+    "title": "Build-Redis: Event-Driven Server in C",
+    "category": "Systems",
+    "description": "Designed a Redis server from scratch in C using epoll non-blocking event loops and custom RESP protocol parsing.",
+    "tag": "C / Networking",
+    "signature": "int aeProcessEvents(aeEventLoop *eventLoop, int flags)",
+    "highlight": "< 0.8ms latency · 95k requests/sec throughput under load."
+  },
+  {
+    "period": "2023",
+    "title": "Tensorx.h: Autograd Engine from First Principles",
+    "category": "Deep Learning",
+    "description": "Built a lightweight C tensor library featuring dynamic reverse-mode automatic differentiation and cache-aligned stride layouts.",
+    "tag": "C / Autograd",
+    "signature": "Tensor* tensor_backward(Tensor* root_node)",
+    "highlight": "Zero-dependency DAG execution graph compilation."
+  },
+  {
+    "period": "2022",
+    "title": "Semantic Segmentation & Vision Systems",
+    "category": "Computer Vision",
+    "description": "Trained and benchmarked deep U-Net architectures with ResNet backbones on urban CamVid datasets for real-time perception.",
+    "tag": "PyTorch / Vision",
+    "signature": "UNetForward(x) -> Logits[B, NumClasses, H, W]",
+    "highlight": "0.742 mIoU at 8.4ms per frame inference."
+  }
+]

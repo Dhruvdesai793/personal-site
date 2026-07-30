@@ -1,4 +1,6 @@
-import { Inter, JetBrains_Mono, Libre_Baskerville } from "next/font/google";
+import { Inter, JetBrains_Mono, Newsreader, Space_Grotesk } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const inter = Inter({
@@ -13,10 +15,16 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
 });
 
-const libreBaskerville = Libre_Baskerville({
-  weight: ["400", "700"],
+const newsreader = Newsreader({
   subsets: ["latin"],
-  variable: "--font-baskerville",
+  style: ["normal", "italic"],
+  variable: "--font-newsreader",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
   display: "swap",
 });
 
@@ -29,12 +37,14 @@ export default function RootLayout({ children }) {
   return (
     <html 
       lang="en" 
-      className={`${inter.variable} ${jetbrainsMono.variable} ${libreBaskerville.variable}`}
+      className={`${inter.variable} ${jetbrainsMono.variable} ${newsreader.variable} ${spaceGrotesk.variable}`}
     >
       <body style={{ position: "relative", minHeight: "100vh" }}>
         <div className="grain-overlay" />
         <div className="glow-bg" />
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

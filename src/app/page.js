@@ -4,10 +4,11 @@ import Landing from '../components/Landing';
 import Projects from '../components/Projects';
 import Reading from '../components/Reading';
 import Papers from '../components/Papers';
+import Timeline from '../components/Timeline';
+import CommitStream from '../components/CommitStream';
 import Footer from '../components/Footer';
 import AmbientBackground from '../components/AmbientBackground';
 import ThemeToggle from '../components/ThemeToggle';
-import CodeInspector from '../components/CodeInspector';
 
 export default function Home() {
   const [mounted, setMounted] = useState(false);
@@ -113,6 +114,18 @@ export default function Home() {
               projects
             </button>
             <button
+              onClick={() => handleTabChange('commits')}
+              className={`nav-link mono-text ${activeTab === 'commits' ? 'active' : ''}`}
+            >
+              commits
+            </button>
+            <button
+              onClick={() => handleTabChange('timeline')}
+              className={`nav-link mono-text ${activeTab === 'timeline' ? 'active' : ''}`}
+            >
+              timeline
+            </button>
+            <button
               onClick={() => handleTabChange('reading')}
               className={`nav-link mono-text ${activeTab === 'reading' ? 'active' : ''}`}
             >
@@ -132,23 +145,35 @@ export default function Home() {
         <main className={`content-area ${transitioning ? 'transition-out' : 'transition-in'}`}>
           {activeTab === 'about' && (
             <section className="about-section subpage-container">
-              <div className="profile-hero">
+              {/* Serene Quiet Hero */}
+              <div className="split-hero">
                 <div className="profile-info">
                   <h1 className="hero-name">Dhruv Desai</h1>
                   <p className="hero-tagline">
                     Building ML Infrastructure & Deep Learning Systems from First Principles.
                   </p>
+                  
+                  <div className="hero-manifesto-tags mono-text" style={{ marginTop: '1.25rem' }}>
+                    <span className="tech-pill">[Systems]</span>
+                    <span className="tech-pill">[CUDA]</span>
+                    <span className="tech-pill">[PyTorch]</span>
+                    <span className="tech-pill">[Embeddings]</span>
+                  </div>
                 </div>
-                <div className="profile-photo-wrapper">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/profile.png"
-                    alt="Dhruv Desai"
-                    className="profile-photo"
-                  />
+
+                <div className="hero-right-col">
+                  <div className="profile-photo-wrapper">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src="/profile.png"
+                      alt="Dhruv Desai"
+                      className="profile-photo"
+                    />
+                  </div>
                 </div>
               </div>
 
+              {/* Quiet Identity Manifesto */}
               <div className="about-body">
                 <p className="about-statement">
                   The craftsmanship of a systems programmer, the curiosity of a deep learning researcher, 
@@ -161,9 +186,6 @@ export default function Home() {
                   optimizing distributed transformer runtimes, and representation learning architectures. 
                   This space is where algorithms meet hardware.
                 </p>
-
-                {/* Interactive Kernel & Code Inspector */}
-                <CodeInspector />
               </div>
             </section>
           )}
@@ -175,6 +197,26 @@ export default function Home() {
                 <p className="section-desc">Selected open-source libraries and implementations.</p>
               </div>
               <Projects />
+            </div>
+          )}
+
+          {activeTab === 'commits' && (
+            <div className="subpage-container">
+              <div className="section-intro">
+                <h2 className="section-title">GitHub Activity Stream</h2>
+                <p className="section-desc">Real-time GitHub contribution chart and server-cached push events.</p>
+              </div>
+              <CommitStream username="Dhruvdesai793" />
+            </div>
+          )}
+
+          {activeTab === 'timeline' && (
+            <div className="subpage-container">
+              <div className="section-intro">
+                <h2 className="section-title">Milestone Log</h2>
+                <p className="section-desc">Major infrastructure, deep learning, and systems milestones.</p>
+              </div>
+              <Timeline />
             </div>
           )}
 

@@ -11,18 +11,33 @@ export default function AmbientBackground() {
     const ctx = canvas.getContext('2d');
     let animationFrameId;
 
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+    let dpr = window.devicePixelRatio || 1;
+    let cssWidth = window.innerWidth;
+    let cssHeight = window.innerHeight;
+
+    const setCanvasSize = () => {
+      dpr = window.devicePixelRatio || 1;
+      cssWidth = window.innerWidth;
+      cssHeight = window.innerHeight;
+
+      canvas.width = cssWidth * dpr;
+      canvas.height = cssHeight * dpr;
+      canvas.style.width = `${cssWidth}px`;
+      canvas.style.height = `${cssHeight}px`;
+
+      ctx.scale(dpr, dpr);
+    };
+
+    setCanvasSize();
 
     const handleResize = () => {
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+      setCanvasSize();
     };
 
     window.addEventListener('resize', handleResize);
 
     // Mouse tracking for subtle interactive drift
-    const mouse = { x: width / 2, y: height / 2, active: false };
+    const mouse = { x: cssWidth / 2, y: cssHeight / 2, active: false };
     const handleMouseMove = (e) => {
       mouse.x = e.clientX;
       mouse.y = e.clientY;
@@ -36,14 +51,13 @@ export default function AmbientBackground() {
     window.addEventListener('mouseleave', handleMouseLeave);
 
     // Initialize latent space nodes
-    const nodeCount = Math.floor(Math.min(width, height) / 22); // Responsive node density
+    const nodeCount = Math.floor(Math.min(cssWidth, cssHeight) / 22);
     const nodes = Array.from({ length: nodeCount }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
+      x: Math.random() * cssWidth,
+      y: Math.random() * cssHeight,
       vx: (Math.random() - 0.5) * 0.35,
       vy: (Math.random() - 0.5) * 0.35,
       radius: Math.random() * 1.5 + 1,
-      // Distribute theme palette colors
       color: Math.random() > 0.5 
         ? 'rgba(181, 97, 82, 0.45)'  // Terracotta
         : Math.random() > 0.5 
@@ -52,7 +66,7 @@ export default function AmbientBackground() {
     }));
 
     const draw = () => {
-      ctx.clearRect(0, 0, width, height);
+      ctx.clearRect(0, 0, cssWidth, cssHeight);
 
       // Render vector connections between nearby nodes
       for (let i = 0; i < nodes.length; i++) {
@@ -78,7 +92,6 @@ export default function AmbientBackground() {
       for (let i = 0; i < nodes.length; i++) {
         const node = nodes[i];
 
-        // Soft mouse repulsion/pull
         if (mouse.active) {
           const mdx = mouse.x - node.x;
           const mdy = mouse.y - node.y;
@@ -93,9 +106,8 @@ export default function AmbientBackground() {
         node.x += node.vx;
         node.y += node.vy;
 
-        // Bounce gently off bounds
-        if (node.x < 0 || node.x > width) node.vx *= -1;
-        if (node.y < 0 || node.y > height) node.vy *= -1;
+        if (node.x < 0 || node.x > cssWidth) node.vx *= -1;
+        if (node.y < 0 || node.y > cssHeight) node.vy *= -1;
 
         ctx.beginPath();
         ctx.arc(node.x, node.y, node.radius, 0, Math.PI * 2);
