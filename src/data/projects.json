@@ -1,0 +1,35 @@
+[
+  {
+    "title": "Build-Redis",
+    "description": "A Redis server implementation from scratch.",
+    "tags": ["C", "Systems"],
+    "link": "https://github.com/Dhruvdesai793/Build-Redis",
+    "techStack": ["Socket Programming", "TCP/IP", "Event Loops", "RESP Protocol"],
+    "commit": "4e19f73",
+    "branch": "main",
+    "signature": "int server_init(struct Server *srv)",
+    "footnotes": "Latency: < 0.8ms · Throughput: 95k req/sec · Epoll-driven non-blocking I/O"
+  },
+  {
+    "title": "Tensorx.h",
+    "description": "A lightweight tensor library built from first principles.",
+    "tags": ["C", "Deep Learning"],
+    "link": "https://github.com/Dhruvdesai793/Tensorx.h",
+    "techStack": ["Autograd", "Custom Memory Allocator", "Cblas BLAS"],
+    "commit": "a28f11b",
+    "branch": "research",
+    "signature": "Tensor* create_tensor(const int* shape, int ndim)",
+    "footnotes": "Memory-mapped cache-friendly strides · Custom autograd graph compilation"
+  },
+  {
+    "title": "UNet-CamVid-Segmentation",
+    "description": "Semantic segmentation with U-Net.",
+    "tags": ["PyTorch", "Computer Vision"],
+    "link": "https://github.com/Dhruvdesai793/UNet-CamVid-Segmentation",
+    "techStack": ["PyTorch", "ResNet Backbone", "CamVid Dataset"],
+    "commit": "ff92cb0",
+    "branch": "infra",
+    "signature": "class UNet(nn.Module): forward(self, x)",
+    "footnotes": "mIoU: 0.742 · Inference: 8.4ms/frame on RTX 4090 · Mixed precision FP16"
+  }
+]

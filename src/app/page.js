@@ -1,66 +1,207 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
+import { useEffect, useState } from 'react';
+import Landing from '../components/Landing';
+import Projects from '../components/Projects';
+import Reading from '../components/Reading';
+import Papers from '../components/Papers';
+import Footer from '../components/Footer';
+import AmbientBackground from '../components/AmbientBackground';
+import ThemeToggle from '../components/ThemeToggle';
+import CodeInspector from '../components/CodeInspector';
 
 export default function Home() {
+  const [mounted, setMounted] = useState(false);
+  const [isLandingComplete, setIsLandingComplete] = useState(false);
+  const [activeTab, setActiveTab] = useState('about');
+  const [transitioning, setTransitioning] = useState(false);
+
+  // Set mounted status on client load & bind mouse spotlight tracking
+  useEffect(() => {
+    setMounted(true);
+    const hasVisited = sessionStorage.getItem('visited_dhruv');
+    if (hasVisited) {
+      setIsLandingComplete(true);
+    }
+
+    const handleMouseMove = (e) => {
+      document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
+      document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // IntersectionObserver for scroll rise-and-fade transitions
+  useEffect(() => {
+    if (!isLandingComplete) return;
+
+    const timeout = setTimeout(() => {
+      const revealElements = document.querySelectorAll('.scroll-reveal');
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+            }
+          });
+        },
+        {
+          threshold: 0.05,
+          rootMargin: '0px 0px -40px 0px',
+        }
+      );
+
+      revealElements.forEach((el) => observer.observe(el));
+
+      return () => {
+        revealElements.forEach((el) => observer.unobserve(el));
+      };
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, [isLandingComplete, activeTab]);
+
+  const handleLandingComplete = () => {
+    setIsLandingComplete(true);
+  };
+
+  const handleTabChange = (tab) => {
+    if (tab === activeTab) return;
+    setTransitioning(true);
+    setTimeout(() => {
+      setActiveTab(tab);
+      setTransitioning(false);
+    }, 200);
+  };
+
+  if (!mounted) {
+    return <div style={{ backgroundColor: 'var(--background, #141312)', minHeight: '100vh' }} />;
+  }
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
+    <>
+      <AmbientBackground />
+      <div className="mouse-spotlight" />
+
+      {!isLandingComplete && (
+        <Landing onComplete={handleLandingComplete} />
+      )}
+
+      <div 
+        className={`main-wrapper ${isLandingComplete ? 'fade-in-content' : 'hidden-content'}`}
+      >
+        {/* Navigation Header */}
+        <header className="nav-header">
+          <div className="nav-logo mono-text">
+            <div className="status-badge-inline">
+              <span className="status-dot" />
+              <span>dd · building infra</span>
+            </div>
+          </div>
+          <nav className="nav-menu" style={{ alignItems: 'center' }}>
+            <button
+              onClick={() => handleTabChange('about')}
+              className={`nav-link mono-text ${activeTab === 'about' ? 'active' : ''}`}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
+              about
+            </button>
+            <button
+              onClick={() => handleTabChange('projects')}
+              className={`nav-link mono-text ${activeTab === 'projects' ? 'active' : ''}`}
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+              projects
+            </button>
+            <button
+              onClick={() => handleTabChange('reading')}
+              className={`nav-link mono-text ${activeTab === 'reading' ? 'active' : ''}`}
+            >
+              reading
+            </button>
+            <button
+              onClick={() => handleTabChange('papers')}
+              className={`nav-link mono-text ${activeTab === 'papers' ? 'active' : ''}`}
+            >
+              papers
+            </button>
+            <ThemeToggle />
+          </nav>
+        </header>
+
+        {/* Content Area */}
+        <main className={`content-area ${transitioning ? 'transition-out' : 'transition-in'}`}>
+          {activeTab === 'about' && (
+            <section className="about-section subpage-container">
+              <div className="profile-hero">
+                <div className="profile-info">
+                  <h1 className="hero-name">Dhruv Desai</h1>
+                  <p className="hero-tagline">
+                    Building ML Infrastructure & Deep Learning Systems from First Principles.
+                  </p>
+                </div>
+                <div className="profile-photo-wrapper">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/profile.png"
+                    alt="Dhruv Desai"
+                    className="profile-photo"
+                  />
+                </div>
+              </div>
+
+              <div className="about-body">
+                <p className="about-statement">
+                  The craftsmanship of a systems programmer, the curiosity of a deep learning researcher, 
+                  presented with the quiet confidence of someone who's spent late nights debugging CUDA 
+                  kernels and reading embedding papers for fun.
+                </p>
+                
+                <p className="about-details">
+                  I focus on building performant, low-level execution backends for deep learning pipelines, 
+                  optimizing distributed transformer runtimes, and representation learning architectures. 
+                  This space is where algorithms meet hardware.
+                </p>
+
+                {/* Interactive Kernel & Code Inspector */}
+                <CodeInspector />
+              </div>
+            </section>
+          )}
+
+          {activeTab === 'projects' && (
+            <div className="subpage-container">
+              <div className="section-intro">
+                <h2 className="section-title">Projects</h2>
+                <p className="section-desc">Selected open-source libraries and implementations.</p>
+              </div>
+              <Projects />
+            </div>
+          )}
+
+          {activeTab === 'reading' && (
+            <div className="subpage-container">
+              <div className="section-intro">
+                <h2 className="section-title">Reading List</h2>
+                <p className="section-desc">Books and literature currently reading or finished.</p>
+              </div>
+              <Reading />
+            </div>
+          )}
+
+          {activeTab === 'papers' && (
+            <div className="subpage-container">
+              <div className="section-intro">
+                <h2 className="section-title">Research Papers</h2>
+                <p className="section-desc">Literature logs and reviews on architectures & systems.</p>
+              </div>
+              <Papers />
+            </div>
+          )}
+        </main>
+
+        {/* Footer Links */}
+        <Footer />
+      </div>
+    </>
   );
 }
