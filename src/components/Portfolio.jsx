@@ -4,6 +4,19 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Icon } from "@iconify/react/offline";
+import githubIcon from "@iconify-icons/simple-icons/github";
+import kaggleIcon from "@iconify-icons/simple-icons/kaggle";
+import linkedinIcon from "@iconify-icons/simple-icons/linkedin";
+import xIcon from "@iconify-icons/simple-icons/x";
+import cIcon from "@iconify-icons/simple-icons/c";
+import nvidiaIcon from "@iconify-icons/simple-icons/nvidia";
+import opencvIcon from "@iconify-icons/simple-icons/opencv";
+import pythonIcon from "@iconify-icons/simple-icons/python";
+import pytorchIcon from "@iconify-icons/simple-icons/pytorch";
+import redisIcon from "@iconify-icons/simple-icons/redis";
+import typescriptIcon from "@iconify-icons/simple-icons/typescript";
+import arrowUpRightIcon from "@iconify-icons/solar/arrow-right-up-linear";
 
 const projects = [
   {
@@ -13,6 +26,8 @@ const projects = [
     description:
       "An N-dimensional tensor library in C. Manual allocation, multiple dtypes, contiguous strides, cloning, and the beginnings of CPU/CUDA backend work.",
     stack: ["C", "MEMORY", "STRIDES", "CUDA"],
+    marks: [[cIcon, "C"], [nvidiaIcon, "NVIDIA"]],
+    accent: "#c9ff2f",
     href: "https://github.com/Dhruvdesai793/Tensorx.h",
   },
   {
@@ -22,6 +37,8 @@ const projects = [
     description:
       "Eight computer-vision architectures—from LeNet-5 to DeepLabv3+—implemented in PyTorch with ablations and single-GPU experiment notes.",
     stack: ["PYTORCH", "ABLATIONS", "RTX 5050", "VISION"],
+    marks: [[pytorchIcon, "PyTorch"], [nvidiaIcon, "NVIDIA"]],
+    accent: "#6d83ff",
     href: "https://github.com/Dhruvdesai793/cnn-papers-exp",
   },
   {
@@ -31,6 +48,8 @@ const projects = [
     description:
       "A custom U-Net and complete CamVid pipeline: augmentation, training, checkpointing, evaluation, inference, and qualitative results.",
     stack: ["PYTORCH", "U-NET", "CAMVID", "OPENCV"],
+    marks: [[pytorchIcon, "PyTorch"], [opencvIcon, "OpenCV"], [pythonIcon, "Python"]],
+    accent: "#ff7a3d",
     href: "https://github.com/Dhruvdesai793/UNet-CamVid-Segmentation",
   },
   {
@@ -40,15 +59,27 @@ const projects = [
     description:
       "A Redis-compatible TCP server in TypeScript with RESP parsing, RDB loading, and the master–replica synchronization handshake.",
     stack: ["TYPESCRIPT", "TCP", "RESP", "REPLICATION"],
+    marks: [[redisIcon, "Redis"], [typescriptIcon, "TypeScript"]],
+    accent: "#ff4438",
     href: "https://github.com/Dhruvdesai793/Build-Redis",
   },
 ];
 
 const profiles = [
-  ["GitHub", "https://github.com/Dhruvdesai793"],
-  ["Kaggle", "https://www.kaggle.com/blixture"],
-  ["LinkedIn", "https://www.linkedin.com/in/dhruv-desai-b0779b370/"],
-  ["X / Twitter", "https://twitter.com/Noctravellian"],
+  { label: "GitHub", href: "https://github.com/Dhruvdesai793", icon: githubIcon },
+  { label: "Kaggle", href: "https://www.kaggle.com/blixture", icon: kaggleIcon },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/dhruv-desai-b0779b370/", icon: linkedinIcon },
+  { label: "X / Twitter", href: "https://twitter.com/Noctravellian", icon: xIcon },
+];
+
+const tools = [
+  [pytorchIcon, "PyTorch"],
+  [nvidiaIcon, "NVIDIA"],
+  [cIcon, "C"],
+  [pythonIcon, "Python"],
+  [opencvIcon, "OpenCV"],
+  [typescriptIcon, "TypeScript"],
+  [redisIcon, "Redis"],
 ];
 
 export default function Portfolio() {
@@ -185,9 +216,10 @@ export default function Portfolio() {
                   <p data-intro className="hero-tagline">I like burning GPUs.</p>
                 </div>
                 <div data-hero-meta className="hero-socials" aria-label="Social profiles">
-                  {profiles.map(([label, href]) => (
+                  {profiles.map(({ label, href, icon }) => (
                     <a key={label} href={href} target="_blank" rel="noreferrer">
-                      {label} <span aria-hidden="true">↗</span>
+                      <span className="social-name"><Icon icon={icon} aria-hidden="true" />{label}</span>
+                      <Icon icon={arrowUpRightIcon} aria-hidden="true" />
                     </a>
                   ))}
                 </div>
@@ -211,6 +243,22 @@ export default function Portfolio() {
             </figure>
           </section>
 
+          <section data-reveal className="tool-strip" aria-labelledby="tool-strip-title">
+            <div className="tool-strip-label">
+              <p id="tool-strip-title">Working set</p>
+              <span>07 / tools</span>
+            </div>
+            <div className="tool-grid">
+              {tools.map(([icon, label], index) => (
+                <div className="tool-mark" key={label}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <Icon icon={icon} aria-hidden="true" />
+                  <p>{label}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
           <section id="work" className="work-section" aria-labelledby="work-title">
             <div data-reveal className="section-heading">
               <p className="eyebrow">Index / 04</p>
@@ -226,8 +274,16 @@ export default function Portfolio() {
                   target="_blank"
                   rel="noreferrer"
                   key={project.title}
+                  style={{ "--project-accent": project.accent }}
                 >
-                  <div className="project-index">{project.index}</div>
+                  <div className="project-index">
+                    <span>{project.index}</span>
+                    <div className="project-logos" aria-hidden="true">
+                      {project.marks.map(([icon, label]) => (
+                        <Icon icon={icon} key={label} />
+                      ))}
+                    </div>
+                  </div>
                   <div className="project-main">
                     <div className="project-title-row">
                       <h3>{project.title}</h3>
@@ -240,9 +296,7 @@ export default function Portfolio() {
                       ))}
                     </ul>
                   </div>
-                  <span className="project-arrow" aria-hidden="true">
-                    ↗
-                  </span>
+                  <Icon className="project-arrow" icon={arrowUpRightIcon} aria-hidden="true" />
                 </a>
               ))}
             </div>
@@ -270,9 +324,11 @@ export default function Portfolio() {
         <footer data-reveal className="site-footer">
           <p>Dhruv Desai © 2026</p>
           <div className="profile-links">
-            {profiles.map(([label, href]) => (
+            {profiles.map(({ label, href, icon }) => (
               <a key={label} href={href} target="_blank" rel="noreferrer">
-                {label} <span aria-hidden="true">↗</span>
+                <Icon icon={icon} aria-hidden="true" />
+                {label}
+                <Icon icon={arrowUpRightIcon} aria-hidden="true" />
               </a>
             ))}
           </div>
